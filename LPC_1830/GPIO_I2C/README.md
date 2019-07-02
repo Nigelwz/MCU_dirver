@@ -1,5 +1,2 @@
 # GPIO_I2C NOTES
-[I2C_NOTE]: https://hackmd.io/gqE-T06uSQuWEoMKkLo7Cw?both
-[https://hackmd.io/gqE-T06uSQuWEoMKkLo7Cw?both]: I2C_NOTE
-
-[id]: <http://example.com/>  "Optional Title Here"
+[I2C_NOTE][https://hackmd.io/gqE-T06uSQuWEoMKkLo7Cw?both]
