@@ -20,25 +20,22 @@ void uart_rx_data_handler(void);
 
 void uart_init(LPC_USART_T *pUART)
 {
-		Chip_SCU_PinMuxSet(0x2, 0, (SCU_MODE_PULLDOWN | SCU_MODE_FUNC1));
+	Chip_SCU_PinMuxSet(0x2, 0, (SCU_MODE_PULLDOWN | SCU_MODE_FUNC1));
 	Chip_SCU_PinMuxSet(0x2, 1, (SCU_MODE_INACT | SCU_MODE_INBUFF_EN | SCU_MODE_ZIF_DIS | SCU_MODE_FUNC1));
 	Chip_UART_Init(LPC_USART0);
 	Chip_UART_SetBaudFDR(LPC_USART0, 115200);
 	Chip_UART_ConfigData(LPC_USART0,  UART_LCR_WLEN8 | UART_LCR_SBS_1BIT);
 	Chip_UART_TXEnable(LPC_USART0);
-Chip_UART_IntEnable(LPC_USART0, (UART_IER_RBRINT | UART_IER_RLSINT));	
+	Chip_UART_IntEnable(LPC_USART0, (UART_IER_RBRINT | UART_IER_RLSINT));	
 	
-		RingBuffer_Init(&rxring, rxbuff, 1, UART_RB_SIZE);
+	RingBuffer_Init(&rxring, rxbuff, 1, UART_RB_SIZE);
 	RingBuffer_Init(&txring, txbuff, 1, UART_RB_SIZE);
 }
 
 void LPC_1830_UARTPutChar(char ch)
 {
-//#if defined(DEBUG_UART)
-	/* Wait for space in FIFO */
 	while ((Chip_UART_ReadLineStatus(LPC_USART0) & UART_LSR_THRE) == 0) {}
 	Chip_UART_SendByte(LPC_USART0, (uint8_t) ch);
-//#endif
 }
 void for_uart_int(void)
 {
@@ -61,18 +58,18 @@ void uart_handler(void)
 		tmp_rx_data = uart_buf[rx_index];
 		if(rx_state == 0)
 		{
-				if(tmp_rx_data == 0xA5)
-				{
-					rx_index++;
-					rx_state = 1;
-				}
+			if(tmp_rx_data == 0xA5)
+			{
+				rx_index++;
+				rx_state = 1;
+			}
 		}
 		else if(rx_state == 1)
 		{
-				tmplen = tmp_rx_data;
-				rx_index++;
-				rx_state = 2;
-			  remain = tmplen - 1;
+			tmplen = tmp_rx_data;
+			rx_index++;
+			rx_state = 2;
+			remain = tmplen - 1;
 		}
 		else if(rx_state == 2)
 		{
@@ -94,7 +91,6 @@ void uart_handler(void)
 					uart_rx_data_handler();
 					rx_state = 0;
 					rx_index = 0;
-					
 				}
 		}
 		
@@ -122,12 +118,13 @@ void uart_rx_data_handler(void)
 		{
 			read_rand_data(0x0000,tmp_i2c_uart,256);
 
-					for(i = 0;i<255;i++)
-					{
-						if(i%16 == 0)
-							uart0_printf("\n");
-						uart0_printf(" 0x%x ",tmp_i2c_uart[i]);
-					}
+			for(i = 0;i<255;i++)
+			{
+				if(i%16 == 0)
+					uart0_printf("\n");
+				
+				uart0_printf(" 0x%x ",tmp_i2c_uart[i]);
+			}
 		}
 	}
 
